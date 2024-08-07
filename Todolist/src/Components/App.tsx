@@ -43,8 +43,9 @@ function App() {
     let [filter, setFilter] = useState<Filter>("all");
 
     const removeTask = (taskId: string) => {
-        const newTasks: TaskProps[] = tasks.filter((task) => task.id !== taskId);
-        setTasks(newTasks);
+        // const newTasks: TaskProps[] = tasks.filter((task) => task.id !== taskId);
+        // setTasks(newTasks);
+        setTasks(tasks.filter((task) => task.id !== taskId));
     }
 
     const changeFilter = (newFilter: Filter) => setFilter(newFilter);
