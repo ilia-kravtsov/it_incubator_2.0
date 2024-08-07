@@ -1,10 +1,10 @@
-import {TaskProps} from "./TodoList";
-import {Filter} from "./App";
+import {TaskProps} from "../Components/TodoList";
+import {Filter} from "../Components/App";
 
-export const filterTasksUtil = (tasks: TaskProps[], filter: Filter):TaskProps[] => {
+export const filterTasks = (tasks: TaskProps[], filter: Filter):TaskProps[] => {
 
     switch(filter) {
-        case "active":
+        case "unfulfilled":
             return tasks.filter(task => !task.isDone);
         case "completed":
             return tasks.filter(task => task.isDone);

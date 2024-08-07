@@ -1,0 +1,27 @@
+@import '../base/fonts/font.module';
+@import '../base/variables.module';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--main-back-color);
+  height: 100vh;
+  font-family: var(--main-font-family), sans-serif;
+  color: var(--main-font-color);
+}
+
+ul {
+  list-style-type: none;
+}
+
+button {
+  cursor: pointer;
+}
+
