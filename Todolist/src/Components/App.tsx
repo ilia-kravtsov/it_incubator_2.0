@@ -42,18 +42,20 @@ function App() {
     ]);
     let [filter, setFilter] = useState<Filter>("all");
 
-    const removeTask = (taskId: string) => {
-        const newTasks: TaskProps[] = tasks.filter((task) => task.id !== taskId);
-        setTasks(newTasks);
-    }
-
+    const removeTask = (taskId: string) => setTasks(tasks.filter((task) => task.id !== taskId));
+    const addTask = (title: string) => setTasks([{id: v4(), title, isDone: false}, ...tasks]);
     const changeFilter = (newFilter: Filter) => setFilter(newFilter);
     const filteredTasks = filterTasks(tasks, filter);
 
     // UI
     return (
         <div className={s.app}>
-            <TodoList title={'What to learn'} tasks={filteredTasks} removeTask={removeTask} changeFilterCB={changeFilter}/>
+            <TodoList
+                title={'What to learn'}
+                tasks={filteredTasks}
+                removeTask={removeTask}
+                addTask={addTask}
+                changeFilterCB={changeFilter}/>
         </div>
     );
 }
@@ -212,7 +214,7 @@ _________________________________ Деструктурирующее присв�
 const {title, tasks} = props
 {title, tasks} - не приводит к созданию нового объекта это схема деструктурирующего присваивания
 */
-/* Lesson_2) {
+/* Lesson 2) {
 в const можно выполнить присвоение только единожды, но внутри ссылочного типа данных объекта массива изменнеия производить мы можем даже с const
 
 State - состояние данных нашего приложения
@@ -301,6 +303,27 @@ const onClickRemoveTaskHandler = () => removeTask(task.id);
 onClickRemoveTaskHandler - ссылка на анонимную функцию
 
 Колбэк-функция (или обратный вызов) - это функция, переданная в другую функцию в качестве аргумента, которая затем вызывается по завершению какого-либо действия.
+*/
+/* Lesson 3
+yarn add uuid @types/uuid - for uuid
+
+console.log(crypto.randomUUID()) - генерирует рандомные id без установки новых библиотек type string
+
+useRef
+пока пользователь набирает текст у нас нет доступа к этому тексту до отправления
+const titleInput = useRef<HTMLInputElement>(null);
+<input ref={titleInput}/>
+<button onClick={() => {
+    // if (titleInput.current) {
+    //     addTask(titleInput.current.value)
+    //     titleInput.current.value = '';
+    // }
+    titleInput.current && addTask(titleInput.current.value);
+
+}
+}></button>
+
+Контролируемый инпут выносим в отдельную компоненту для того чтобы его перерендеринг был максимально дешевый
 */
 /* useState
 1. функция setState - изменяет состояние асинхронно

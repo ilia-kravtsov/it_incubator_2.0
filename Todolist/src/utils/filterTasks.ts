@@ -11,13 +11,4 @@ export const filterTasks = (tasks: TaskProps[], filter: Filter):TaskProps[] => {
         default:
             return tasks
     }
-
-    // let filteredTasksForRender: TaskProps[] = tasks;
-    // if (filter === "active") {
-    //     return filteredTasksForRender = tasks.filter(task => task.isDone);
-    // } else if (filter === "completed") {
-    //     return filteredTasksForRender = tasks.filter(task => !task.isDone);
-    // } else {
-    //     return filteredTasksForRender
-    // }
 }
