@@ -1,0 +1,26 @@
+@import "../base/variables.module";
+
+.taskTitle {
+  cursor: pointer;
+  width: 60%;
+}
+.taskTitleChanger {
+  background: transparent;
+  color: var(--main-font-color);
+  padding: 5px;
+  border: 1px solid var(--todolist-font-color);
+  outline: none;
+}
+.taskTitleChangerButton {
+  background: transparent;
+  border: 1px solid var(--todolist-font-color);
+  color: var(--main-font-color);
+  padding: 5px;
+}
+.taskDone{
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+button.activeFilterBtn {
+  border: 1px solid dodgerblue;
+}

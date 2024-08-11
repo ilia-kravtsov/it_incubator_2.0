@@ -42,6 +42,13 @@ function App() {
     ]);
     let [filter, setFilter] = useState<Filter>("all");
 
+    const changeTaskStatus = (taskId: string, newTaskStatus: boolean) => {
+        // выборочное преобразование массива || selective array conversion
+        setTasks(tasks.map(task => task.id === taskId ? {...task, isDone: newTaskStatus } : task ));
+    }
+    const changeTaskTitle = (taskId: string, newTitle: string) => {
+        setTasks(tasks.map(task => task.id === taskId ? {...task, title: newTitle } : task ));
+    }
     const removeTask = (taskId: string) => setTasks(tasks.filter((task) => task.id !== taskId));
     const addTask = (title: string) => setTasks([{id: v4(), title, isDone: false}, ...tasks]);
     const changeFilter = (newFilter: Filter) => setFilter(newFilter);
@@ -52,9 +59,12 @@ function App() {
         <div className={s.app}>
             <TodoList
                 title={'What to learn'}
+                filter={filter}
                 tasks={filteredTasks}
                 removeTask={removeTask}
                 addTask={addTask}
+                changeTaskStatus={changeTaskStatus}
+                changeTaskTitle={changeTaskTitle}
                 changeFilterCB={changeFilter}/>
         </div>
     );
@@ -324,6 +334,9 @@ const titleInput = useRef<HTMLInputElement>(null);
 }></button>
 
 Контролируемый инпут выносим в отдельную компоненту для того чтобы его перерендеринг был максимально дешевый
+*/
+/* Lesson 4
+Typescript first
 */
 /* useState
 1. функция setState - изменяет состояние асинхронно

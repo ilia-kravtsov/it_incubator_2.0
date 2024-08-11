@@ -21,7 +21,8 @@ ul {
   list-style-type: none;
 }
 
-button {
+button, input[type='checkbox'] {
   cursor: pointer;
 }
+
 
