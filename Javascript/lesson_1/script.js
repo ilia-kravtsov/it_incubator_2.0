@@ -229,23 +229,3 @@ const newSuperUser2 = {
 console.log('newSuperUser', newSuperUser.address.city) //London
 console.log('superUser', superUser.address.city) //Lebsackbury
 
-const superUserCopy2 = {
-  ...superUser,
-  address: {
-    ...superUser.address,
-    geo: { ...superUser.address.geo, lat: "38.214" },
-  },
-};
-console.log(superUserCopy2.address.geo);
-const superUserCopy3 = {
-  ...superUser,
-  address: {
-    ...superUser.address,
-    geo: { lng: "23.2344", lat: "38.214" },
-  },
-};
-console.log(superUserCopy3.address.geo);
-const superUserCopy4 = { ...superUser, email: "anotherEmail@mail.com" };
-console.log(superUserCopy4.email);
-
-
