@@ -1,7 +1,6 @@
-import {TaskProps} from "../Components/TodoList";
-import {Filter} from "../Components/App";
+import {Filter, TaskType} from "../Components/App";
 
-export const filterTasks = (tasks: TaskProps[], filter: Filter):TaskProps[] => {
+export const filterTasks = (tasks: TaskType[], filter: Filter): TaskType[] => {
 
     switch(filter) {
         case "unfulfilled":

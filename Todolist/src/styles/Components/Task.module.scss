@@ -3,6 +3,7 @@
 .taskTitle {
   cursor: pointer;
   width: 60%;
+  letter-spacing: 1px;
 }
 .taskTitleChanger {
   background: transparent;
@@ -10,6 +11,11 @@
   padding: 5px;
   border: 1px solid var(--todolist-font-color);
   outline: none;
+  letter-spacing: 1px;
+  font-family: var(--main-font-family), sans-serif;
+  &::placeholder {
+    font-family: var(--main-font-family), sans-serif;
+  }
 }
 .taskTitleChangerButton {
   background: transparent;
@@ -23,4 +29,10 @@
 }
 button.activeFilterBtn {
   border: 1px solid dodgerblue;
+}
+.editModeBox {
+  display: flex;
+}
+.border {
+  border: 1px solid silver;
 }

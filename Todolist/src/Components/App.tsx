@@ -1,71 +1,109 @@
 import React, {useState} from 'react';
 import s from '../styles/Components/App.module.scss';
-import {TaskProps, TodoList} from "./TodoList";
-import {filterTasks} from "../utils/filterTasks";
+import {TodoList} from "./TodoList";
 import {v4} from 'uuid';
+import {AddItemForm} from "./AddItemForm";
+import {ButtonAppBar} from "./ButtonAppBar";
 
-export type Filter = "all" | "unfulfilled" | "completed";
+export type Filter = 'all' | 'unfulfilled' | 'completed';
+export type Todolist = {
+    id: string
+    title: string
+    filter: Filter
+}
+
+export type TaskType = {
+    id: string
+    title: string
+    isDone: boolean
+}
+export type Tasks = {
+    [todolistId: string]: TaskType[]
+}
 
 function App() {
-    // BLL
-    let [tasks, setTasks] = useState<TaskProps[]>([
-        {
-            id: v4(),
-            title: "HTML&CSS",
-            isDone: true,
-        },
-        {
-            id: v4(),
-            title: "JS",
-            isDone: true,
-        },
-        {
-            id: v4(),
-            title: "React",
-            isDone: true,
-        },
-        {
-            id: v4(),
-            title: "React-Query",
-            isDone: false,
-        },
-        {
-            id: v4(),
-            title: "Redux",
-            isDone: false,
-        },
-        {
-            id: v4(),
-            title: "Redux-Toolkit",
-            isDone: false,
-        },
-    ]);
-    let [filter, setFilter] = useState<Filter>("all");
 
-    const changeTaskStatus = (taskId: string, newTaskStatus: boolean) => {
-        // выборочное преобразование массива || selective array conversion
-        setTasks(tasks.map(task => task.id === taskId ? {...task, isDone: newTaskStatus } : task ));
+    const todolistId_1 = v4();
+    const todolistId_2 = v4();
+    // BLL
+    let [todolists, setTodolists] = useState<Todolist[]>([
+        {id: todolistId_1, title: 'What to learn', filter: 'all'},
+        {id: todolistId_2, title: 'What to read', filter: 'all'},
+    ])
+
+    let [tasks, setTasks] = useState<Tasks>({
+        [todolistId_1]: [
+            { id: v4(), title: "HTML", isDone: true},
+            { id: v4(), title: "CSS", isDone: true},
+            { id: v4(), title: "SASS", isDone: false},
+        ],
+        [todolistId_2]: [
+            { id: v4(), title: "React", isDone: true},
+            { id: v4(), title: "JS", isDone: false},
+            { id: v4(), title: "Redux", isDone: true},
+        ],
+    })
+
+    const changeTaskStatus = (todolistId: string, taskId: string, newTaskStatus: boolean) => {
+        // setTasks(tasks.map(task => task.id === taskId ? {...task, isDone: newTaskStatus } : task ));
+        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, isDone: newTaskStatus} : task)});
     }
-    const changeTaskTitle = (taskId: string, newTitle: string) => {
-        setTasks(tasks.map(task => task.id === taskId ? {...task, title: newTitle } : task ));
+    const changeTaskTitle = (todolistId: string, taskId: string, newTitle: string) => {
+        // setTasks(tasks.map(task => task.id === taskId ? {...task, title: newTitle } : task ));
+        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, title: newTitle} : task)});
     }
-    const removeTask = (taskId: string) => setTasks(tasks.filter((task) => task.id !== taskId));
-    const addTask = (title: string) => setTasks([{id: v4(), title, isDone: false}, ...tasks]);
-    const changeFilter = (newFilter: Filter) => setFilter(newFilter);
-    const filteredTasks = filterTasks(tasks, filter);
+    const removeTask = (todolistId: string, taskId: string) => {
+        // setTasks(tasks.filter((task) => task.id !== taskId));
+        setTasks({...tasks, [todolistId]: tasks[todolistId].filter(task => task.id !== taskId)});
+    }
+    const addTask = (todolistId: string, title: string) => {
+        // setTasks([{id: v4(), title, isDone: false}, ...tasks]);
+        setTasks({...tasks, [todolistId]: [{id: v4(), title, isDone: false}, ...tasks[todolistId]]});
+    }
+    const changeFilter = (todolistId: string, newFilter: Filter) => {
+        setTodolists(todolists.map(tl => tl.id === todolistId ? {...tl, filter: newFilter}: tl));
+    }
+
+    const deleteTodolist = (todolistId: string) => {
+        setTodolists(todolists.filter(tl => tl.id !== todolistId));
+        delete tasks[todolistId];
+    }
+
+    const addTodolist = (title: string) => {
+        let newTodolistId = v4();
+        let newTodolist: Todolist = {id: newTodolistId, title: title, filter: 'all'};
+        setTodolists([newTodolist, ...todolists])
+        setTasks({...tasks, [newTodolistId]: []})
+    }
+
+    const changeTodolistTitle = (todolistId: string, title: string) => {
+        setTodolists(todolists.map(tl => tl.id === todolistId ? {...tl, title} : tl))
+    }
 
     // UI
     return (
         <div className={s.app}>
-            <TodoList
-                title={'What to learn'}
-                filter={filter}
-                tasks={filteredTasks}
-                removeTask={removeTask}
-                addTask={addTask}
-                changeTaskStatus={changeTaskStatus}
-                changeTaskTitle={changeTaskTitle}
-                changeFilterCB={changeFilter}/>
+            <ButtonAppBar/>
+            <div className={s.addTodolistBox}>
+                <AddItemForm addItem={addTodolist}/>
+            </div>
+            <div className={s.todolistBox}>
+                {todolists.map((todolist) => {
+                    return (
+                        <TodoList
+                        key={todolist.id}
+                        todolist={todolist}
+                        deleteTodolist={deleteTodolist}
+                        changeTodolistTitle={changeTodolistTitle}
+                        tasks={tasks}
+                        removeTask={removeTask}
+                        addTask={addTask}
+                        changeTaskStatus={changeTaskStatus}
+                        changeTaskTitle={changeTaskTitle}
+                        changeFilterCB={changeFilter}/>
+                    )
+                })}
+            </div>
         </div>
     );
 }

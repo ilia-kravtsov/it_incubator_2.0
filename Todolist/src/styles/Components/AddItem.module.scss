@@ -1,0 +1,42 @@
+@import '../base/variables.module';
+
+.addItemBox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &InputButton {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+
+  &__input {
+    padding: 5px;
+    width: 85%;
+    outline: none;
+    &::placeholder {
+      font-family: var(--main-font-family), sans-serif;
+    }
+
+    &Error {
+      border: 2px solid brown;
+    }
+  }
+
+  &__button {
+    border: 1px solid var(--todolist-font-color);
+    background: transparent;
+    width: 30px;
+    color: var(--todolist-font-color);
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+  }
+  &__error {
+    color: brown;
+    margin-top: 10px;
+  }
+}

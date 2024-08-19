@@ -1,7 +1,11 @@
 @import '../base/variables.module';
+@import './AddItem.module';
 
 .todolist {
-  border: 2px solid var(--todolist-font-color);
+  border: 1px solid var(--todolist-font-color);
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+  0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+  0px 1px 5px 0px rgba(0, 0, 0, 0.12);
   background-color: var(--todolist-back-color);
   border-radius: 5px;
   padding: 20px;
@@ -13,36 +17,18 @@
   align-items: center;
   justify-content: space-between;
 
-  .todolistBox {
+  .todolist__titleContainer {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 20px;
     width: 100%;
 
-    &__input {
-      padding: 5px;
-      width: 85%;
-      outline: none;
-      &::placeholder {
-        font-family: var(--main-font-family), sans-serif;
-      }
-
-      &Error {
-        border: 2px solid brown;
-      }
-    }
-    &__button {
-      border: 1px solid var(--todolist-font-color);
+    .titleDeleteBtn {
+      padding: 0 10px;
       background: transparent;
-      width: 30px;
       color: var(--todolist-font-color);
-
-      &:disabled {
-        cursor: default;
-        opacity: 0.5;
-      }
-    }
-    &__error {
-      color: brown;
+      border: 2px solid var(--todolist-font-color);
     }
   }
 
@@ -54,9 +40,10 @@
       padding: 5px 0;
       display: flex;
       justify-content: space-between;
+      align-items: center;
 
       &Button {
-        @extend .todolistBox__button;
+        @extend .addItemBox__button;
         transition: transform 0.07s;
 
         &:hover {
@@ -88,4 +75,6 @@
   }
 }
 
-
+.opacity {
+  opacity: 0.5;
+}
