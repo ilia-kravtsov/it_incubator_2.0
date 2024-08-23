@@ -1,9 +1,26 @@
-import React, {useState} from 'react';
+import React, {Reducer, useReducer, useState} from 'react';
 import s from '../styles/Components/App.module.scss';
 import {TodoList} from "./TodoList";
 import {v4} from 'uuid';
 import {AddItemForm} from "./AddItemForm";
 import {ButtonAppBar} from "./ButtonAppBar";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import {
+    addTaskAC,
+    changeTaskStatusAC,
+    changeTaskTitleAC,
+    removeTaskAC,
+    TasksActions,
+    tasksReducer
+} from "../reducers/tasksReducer";
+import {
+    addTodolistAC,
+    changeTodolistFilterAC, changeTodolistTitleAC,
+    removeTodolistAC,
+    TodolistsActions,
+    todolistsReducer
+} from "../reducers/todolsitReducer";
 
 export type Filter = 'all' | 'unfulfilled' | 'completed';
 export type Todolist = {
@@ -20,18 +37,28 @@ export type TaskType = {
 export type Tasks = {
     [todolistId: string]: TaskType[]
 }
+type ThemeMode = 'dark' | 'light'
 
 function App() {
+    const [themeMode, setThemeMode] = useState<ThemeMode>('light')
+    const theme = createTheme({
+        palette: {
+            mode: themeMode === 'light' ? 'light' : 'dark',
+            primary: {
+                main: '#C0C0C0FF',
+            },
+        },
+    })
+    const changeModeHandler = () => setThemeMode(themeMode == 'light' ? 'dark' : 'light');
 
     const todolistId_1 = v4();
     const todolistId_2 = v4();
     // BLL
-    let [todolists, setTodolists] = useState<Todolist[]>([
+    let [todolists, dispatchTodolists] = useReducer<Reducer<Todolist[], TodolistsActions>>(todolistsReducer, [
         {id: todolistId_1, title: 'What to learn', filter: 'all'},
         {id: todolistId_2, title: 'What to read', filter: 'all'},
     ])
-
-    let [tasks, setTasks] = useState<Tasks>({
+    let [tasks, dispatchTasks] = useReducer<Reducer<Tasks, TasksActions>>(tasksReducer, {
         [todolistId_1]: [
             { id: v4(), title: "HTML", isDone: true},
             { id: v4(), title: "CSS", isDone: true},
@@ -46,65 +73,75 @@ function App() {
 
     const changeTaskStatus = (todolistId: string, taskId: string, newTaskStatus: boolean) => {
         // setTasks(tasks.map(task => task.id === taskId ? {...task, isDone: newTaskStatus } : task ));
-        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, isDone: newTaskStatus} : task)});
+        // setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, isDone: newTaskStatus} : task)});
+        dispatchTasks(changeTaskStatusAC(todolistId, taskId, newTaskStatus));
     }
     const changeTaskTitle = (todolistId: string, taskId: string, newTitle: string) => {
         // setTasks(tasks.map(task => task.id === taskId ? {...task, title: newTitle } : task ));
-        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, title: newTitle} : task)});
+        // setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, title: newTitle} : task)});
+        dispatchTasks(changeTaskTitleAC(todolistId, taskId, newTitle));
     }
     const removeTask = (todolistId: string, taskId: string) => {
         // setTasks(tasks.filter((task) => task.id !== taskId));
-        setTasks({...tasks, [todolistId]: tasks[todolistId].filter(task => task.id !== taskId)});
+        // setTasks({...tasks, [todolistId]: tasks[todolistId].filter(task => task.id !== taskId)});
+        dispatchTasks(removeTaskAC(todolistId, taskId));
     }
     const addTask = (todolistId: string, title: string) => {
         // setTasks([{id: v4(), title, isDone: false}, ...tasks]);
-        setTasks({...tasks, [todolistId]: [{id: v4(), title, isDone: false}, ...tasks[todolistId]]});
-    }
-    const changeFilter = (todolistId: string, newFilter: Filter) => {
-        setTodolists(todolists.map(tl => tl.id === todolistId ? {...tl, filter: newFilter}: tl));
+        // setTasks({...tasks, [todolistId]: [{id: v4(), title, isDone: false}, ...tasks[todolistId]]});
+        dispatchTasks(addTaskAC(todolistId, title));
     }
 
-    const deleteTodolist = (todolistId: string) => {
-        setTodolists(todolists.filter(tl => tl.id !== todolistId));
-        delete tasks[todolistId];
+    const changeTodolistFilter = (todolistId: string, newFilter: Filter) => {
+       // setTodolists(todolists.map(tl => tl.id === todolistId ? {...tl, filter: newFilter}: tl));
+        dispatchTodolists(changeTodolistFilterAC(todolistId, newFilter))
     }
-
+    const removeTodolist = (todolistId: string) => {
+       // setTodolists(todolists.filter(tl => tl.id !== todolistId));
+       // delete tasks[todolistId];
+        dispatchTodolists(removeTodolistAC(todolistId))
+    }
     const addTodolist = (title: string) => {
-        let newTodolistId = v4();
-        let newTodolist: Todolist = {id: newTodolistId, title: title, filter: 'all'};
-        setTodolists([newTodolist, ...todolists])
-        setTasks({...tasks, [newTodolistId]: []})
+        // let newTodolistId = v4();
+        // let newTodolist: Todolist = {id: newTodolistId, title: title, filter: 'all'};
+        // setTodolists([newTodolist, ...todolists])
+        // setTasks({...tasks, [newTodolistId]: []})
+        const newTodolistActionObject = addTodolistAC(title)
+        dispatchTodolists(newTodolistActionObject);
+        dispatchTasks(newTodolistActionObject);
     }
-
     const changeTodolistTitle = (todolistId: string, title: string) => {
-        setTodolists(todolists.map(tl => tl.id === todolistId ? {...tl, title} : tl))
+        // setTodolists(todolists.map(tl => tl.id === todolistId ? {...tl, title} : tl))
+        dispatchTodolists(changeTodolistTitleAC(todolistId, title));
     }
-
     // UI
     return (
-        <div className={s.app}>
-            <ButtonAppBar/>
-            <div className={s.addTodolistBox}>
-                <AddItemForm addItem={addTodolist}/>
+        <ThemeProvider theme={theme}>
+            <div className={s.app}>
+                <ButtonAppBar themeMode={changeModeHandler}/>
+                <div className={s.addTodolistBox}>
+                    <AddItemForm addItem={addTodolist}/>
+                </div>
+                <div className={s.todolistBox}>
+
+                    {todolists.map((todolist) => {
+                        return (
+                            <TodoList
+                            key={todolist.id}
+                            todolist={todolist}
+                            deleteTodolist={removeTodolist}
+                            changeTodolistTitle={changeTodolistTitle}
+                            tasks={tasks}
+                            removeTask={removeTask}
+                            addTask={addTask}
+                            changeTaskStatus={changeTaskStatus}
+                            changeTaskTitle={changeTaskTitle}
+                            changeFilterCB={changeTodolistFilter}/>
+                        )
+                    })}
+                </div>
             </div>
-            <div className={s.todolistBox}>
-                {todolists.map((todolist) => {
-                    return (
-                        <TodoList
-                        key={todolist.id}
-                        todolist={todolist}
-                        deleteTodolist={deleteTodolist}
-                        changeTodolistTitle={changeTodolistTitle}
-                        tasks={tasks}
-                        removeTask={removeTask}
-                        addTask={addTask}
-                        changeTaskStatus={changeTaskStatus}
-                        changeTaskTitle={changeTaskTitle}
-                        changeFilterCB={changeFilter}/>
-                    )
-                })}
-            </div>
-        </div>
+        </ThemeProvider>
     );
 }
 

@@ -56,6 +56,7 @@ export const AddItemForm = ({addItem}: Props) => {
                            type={'text'}
                            label={'Enter new title'}
                            error={!!error}
+                           helperText={error}
                            InputProps={{
                                style: { color: 'silver'},
                                disableUnderline: false,
@@ -83,7 +84,6 @@ export const AddItemForm = ({addItem}: Props) => {
                     <AddIcon/>
                 </IconButton>
             </div>
-            {error && <p className={s.addItemBox__error}>{error}</p>}
         </div>
     );
 };

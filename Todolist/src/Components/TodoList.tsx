@@ -43,6 +43,7 @@ export const TodoList: FC<Props> = ({todolist, tasks, removeTask, addTask, chang
     const todolistTitleChangeCB = (newTitle: string) => {
         changeTodolistTitle(todolist.id, newTitle)
     }
+
     return (
         <div className={s.todolist}>
             <div className={s.todolist__titleContainer}>

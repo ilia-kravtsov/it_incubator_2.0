@@ -3,11 +3,21 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import {MenuButton} from "./MenuButton";
+import Switch from '@mui/material/Switch'
 
-export const ButtonAppBar = () => {
+type Props = {
+    themeMode: () => void
+}
+
+export const ButtonAppBar = ({themeMode}: Props) => {
+
+    const fontFamily = {
+        fontFamily: 'Montserrat'
+    }
+
     return (
         <Box style={{width: '100%'}} >
             <AppBar position="static" style={{backgroundColor: 'transparent'}}>
@@ -21,10 +31,13 @@ export const ButtonAppBar = () => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} style={{fontFamily: 'Montserrat'}}>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} style={{fontFamily: 'Montserrat', color: 'silver'}}>
                         Todolists
                     </Typography>
-                    <Button color="inherit" style={{fontFamily: 'Montserrat'}}>Login</Button>
+                    <MenuButton style={fontFamily}>Login</MenuButton>
+                    <MenuButton style={fontFamily}>Logout</MenuButton>
+                    <MenuButton style={fontFamily}>Faq</MenuButton>
+                    <Switch color={'default'} onChange={themeMode} />
                 </Toolbar>
             </AppBar>
         </Box>
