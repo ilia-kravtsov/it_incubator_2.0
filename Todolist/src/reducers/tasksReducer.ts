@@ -1,12 +1,13 @@
 import {Tasks} from "../Components/App";
 import {v4} from "uuid";
-import {addTodolistAC} from "./todolsitReducer";
+import {addTodolistAC, RemoveTodolist, removeTodolistAC} from "./todolsitReducer";
 
 export type TasksActions = ReturnType<typeof removeTaskAC>
     | ReturnType<typeof addTaskAC>
     | ReturnType<typeof changeTaskTitleAC>
     | ReturnType<typeof changeTaskStatusAC>
     | ReturnType<typeof addTodolistAC>
+    | ReturnType<typeof removeTodolistAC>
 
 export const tasksReducer = (state: Tasks, action: TasksActions): Tasks => {
 
@@ -24,11 +25,19 @@ export const tasksReducer = (state: Tasks, action: TasksActions): Tasks => {
             return {...state, [todolistId]: state[todolistId].map(task => task.id === action.payload.taskId ? {...task, title: action.payload.title} : task)}
         }
         case "CHANGE_TASK_STATUS": {
-            const todolistId = action.payload.todolistId;
-            return {...state, [todolistId]: state[todolistId].map(task => task.id === action.payload.taskId ? {...task, isDone: action.payload.newTaskStatus} : task)}
+            const {todolistId, taskId, newTaskStatus} = action.payload;
+            debugger
+            return {...state, [todolistId]: state[todolistId].map(task => task.id === taskId ? {...task, isDone: newTaskStatus} : task)}
         }
         case "ADD_TODOLIST": {
             return {...state, [action.payload.newTodolistId]: []}
+        }
+        case "REMOVE_TODOLIST": {
+            // const {[action.payload.todolistId]: [] or xxx, ...rest} = state // при деструктуризации инициализируется новый объект
+            // return rest
+            let copyState = {...state}
+            delete copyState[action.payload.todolistId]
+            return copyState
         }
         default:
             return state;

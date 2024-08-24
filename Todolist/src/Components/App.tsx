@@ -5,7 +5,6 @@ import {v4} from 'uuid';
 import {AddItemForm} from "./AddItemForm";
 import {ButtonAppBar} from "./ButtonAppBar";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
 import {
     addTaskAC,
     changeTaskStatusAC,
